@@ -1,7 +1,33 @@
+'use client';
+import { useEffect, useState } from 'react';
 import Image from "next/image";
 import styles from "./page.module.css";
 
 export default function Home() {
+  const [tracks, setTracks] = useState([]);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetch('http://localhost:4000/api/top10')
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setTracks(data);
+          setError(null);
+        } else if (data && data.error) {
+          setError(typeof data.error === 'string' ? data.error : JSON.stringify(data.error));
+          setTracks([]);
+        } else {
+          setError('Unexpected response from server.');
+          setTracks([]);
+        }
+      })
+      .catch((err) => {
+        setError('Failed to fetch tracks.');
+        setTracks([]);
+      });
+  }, []);
+
   return (
     <div className={styles.page}>
       <main className={styles.main}>
@@ -90,6 +116,26 @@ export default function Home() {
           Go to nextjs.org →
         </a>
       </footer>
+      <div style={{ maxWidth: 600, margin: '2rem auto', fontFamily: 'sans-serif' }}>
+        <h1>Spotify Top 10</h1>
+        {error && <div style={{ color: 'red', marginBottom: 16 }}>{error}</div>}
+        {tracks.length > 0 && (
+          <ul style={{ listStyle: 'none', padding: 0 }}>
+            {tracks.map((track, i) => (
+              <li key={i} style={{ display: 'flex', alignItems: 'center', marginBottom: 16 }}>
+                <img src={track.image} alt={track.name} width={64} height={64} style={{ borderRadius: 8, marginRight: 16 }} />
+                <div>
+                  <a href={track.url} target="_blank" rel="noopener noreferrer" style={{ fontWeight: 'bold', fontSize: 18 }}>
+                    {track.name}
+                  </a>
+                  <div style={{ color: '#555' }}>{track.artist}</div>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
+        {!error && tracks.length === 0 && <div>No tracks found.</div>}
+      </div>
     </div>
   );
 }
