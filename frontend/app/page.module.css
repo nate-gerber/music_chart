@@ -1,0 +1,65 @@
+.main {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6rem;
+    min-height: 100vh;
+  }
+  
+  .description {
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+  
+  .title {
+    font-size: 3rem;
+    font-weight: 600;
+  }
+  
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    width: 100%;
+    max-width: 800px;
+  }
+  
+  .chart {
+    list-style: none;
+    padding: 0;
+    width: 100%;
+  }
+  
+  .card {
+    padding: 1.5rem;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: background 0.2s ease-in-out;
+  }
+  
+  .card:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+  
+  .card h2 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.5rem;
+  }
+  
+  .card h2 span {
+    font-weight: 300;
+    margin-right: 1rem;
+    color: rgba(255, 255, 255, 0.7);
+  }
+  
+  .card p {
+    margin: 0;
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.7);
+  }
+  
+  .error {
+    color: #ff4d4d;
+  } 
