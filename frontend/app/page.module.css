@@ -1,20 +1,30 @@
 .main {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     align-items: center;
-    padding: 6rem;
+    padding: 4rem 2rem;
     min-height: 100vh;
+    width: 100%;
   }
   
   .description {
-    margin-bottom: 2rem;
+    margin-bottom: 3rem;
     text-align: center;
+    width: 100%;
+    max-width: var(--max-width);
   }
   
   .title {
-    font-size: 3rem;
-    font-weight: 600;
+    font-size: 3.5rem;
+    font-weight: 700;
+    letter-spacing: -0.05rem;
+  }
+  
+  .subtitle {
+    font-size: 1.25rem;
+    color: rgba(var(--foreground-rgb), 0.7);
+    margin-top: 0.5rem;
+    font-weight: 300;
   }
   
   .grid {
@@ -22,7 +32,7 @@
     grid-template-columns: 1fr;
     gap: 1.5rem;
     width: 100%;
-    max-width: 800px;
+    max-width: var(--max-width);
   }
   
   .chart {
@@ -32,34 +42,209 @@
   }
   
   .card {
-    padding: 1.5rem;
-    border-radius: 12px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    transition: background 0.2s ease-in-out;
+    padding: 1.5rem 2rem;
+    border-radius: var(--border-radius);
+    background: linear-gradient(to bottom right, rgba(var(--tile-start-rgb), 0.9), rgba(var(--tile-end-rgb), 0.9));
+    border: 1px solid rgba(var(--tile-border), 0.2);
+    transition: all 0.2s ease-in-out;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   }
   
   .card:hover {
-    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(var(--primary-glow), 0.15);
+    border-color: rgba(var(--tile-border), 0.4);
   }
   
   .card h2 {
-    margin: 0 0 0.5rem 0;
-    font-size: 1.5rem;
+    margin: 0 0 0.25rem 0;
+    font-size: 1.75rem;
+    font-weight: 600;
   }
   
   .card h2 span {
     font-weight: 300;
-    margin-right: 1rem;
-    color: rgba(255, 255, 255, 0.7);
+    margin-right: 1.5rem;
+    color: rgba(var(--foreground-rgb), 0.5);
   }
   
   .card p {
     margin: 0;
-    font-size: 1rem;
-    color: rgba(255, 255, 255, 0.7);
+    font-size: 1.1rem;
+    color: rgba(var(--foreground-rgb), 0.6);
+    font-weight: 400;
   }
   
   .error {
-    color: #ff4d4d;
+    color: #ff5555;
+    font-size: 1.2rem;
+  }
+  
+  .controls {
+    width: 100%;
+    max-width: var(--max-width);
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(var(--tile-border), 0.15);
+    border-radius: var(--border-radius);
+    padding: 1.5rem 2rem;
+    margin-bottom: 3rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  }
+  
+  .controlRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2.5rem;
+    margin-bottom: 1.25rem;
+  }
+  
+  .controlRow:last-child {
+    margin-bottom: 0;
+  }
+  
+  .sliderGroup {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .sliderGroup label {
+    font-size: 1rem;
+    color: rgba(var(--foreground-rgb), 0.8);
+    margin-bottom: 0.75rem;
+  }
+  
+  .sliderGroup input[type="range"] {
+    width: 100%;
+    cursor: pointer;
+  }
+  
+  .button {
+    background-color: var(--primary-glow);
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 0.8rem 1.8rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    align-self: flex-end;
+    box-shadow: 0 4px 15px rgba(var(--primary-glow), 0.2);
+  }
+  
+  .button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(var(--primary-glow), 0.3);
+  }
+  
+  .button:disabled {
+    background-color: #555;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+  
+  .cardHeader {
+    margin-bottom: 1.5rem;
+  }
+  
+  .cardBody {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(var(--tile-border), 0.2);
+  }
+  
+  .rankingDetails {
+    flex-grow: 1;
+  }
+  
+  .rankingDetails h4 {
+    margin: 0 0 0.75rem 0;
+    font-size: 1rem;
+    font-weight: 500;
+    color: rgba(var(--foreground-rgb), 0.8);
+  }
+  
+  .rankingDetails ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 0.9rem;
+    color: rgba(var(--foreground-rgb), 0.7);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem 1.5rem;
+  }
+  
+  .rankingDetails li {
+    padding: 0.25rem;
+    background: transparent;
+    border-radius: 0;
+  }
+  
+  .sparklineContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .sparklineLabel {
+    font-size: 0.8rem;
+    color: rgba(var(--foreground-rgb), 0.5);
+    font-style: italic;
+  }
+  
+  .imageContainer {
+    margin-top: 1rem;
+    width: 100%;
+    padding-top: 56.25%; /* 16:9 Aspect Ratio */
+    position: relative;
+    background-color: rgba(0,0,0,0.2);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  .songImage {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* This will cover the area without stretching */
+  }
+  
+  .reception {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    font-style: italic;
+    color: rgba(255, 255, 255, 0.6);
+    border-left: 2px solid rgba(255, 255, 255, 0.2);
+    padding-left: 1rem;
+    white-space: pre-wrap;
+  }
+  
+  .loading {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.6);
+    font-style: italic;
+  }
+  
+  .performanceImage {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .chartImage {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   } 

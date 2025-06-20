@@ -1,62 +1,49 @@
 import { NextResponse } from 'next/server';
-// import axios from 'axios';
+import { generateMockData } from './mock-data';
+import { calculateAdjustedScore } from './ranking-algorithm';
 
 export async function GET(request) {
-  // Mock data to replace Spotify API call
-  const mockTracks = [
-    { name: 'Track 1', artist: 'Artist A' },
-    { name: 'Track 2', artist: 'Artist B' },
-    { name: 'Track 3', artist: 'Artist C' },
-    { name: 'Track 4', artist: 'Artist D' },
-    { name: 'Track 5', artist: 'Artist E' },
-    { name: 'Track 6', artist: 'Artist F' },
-    { name: 'Track 7', artist: 'Artist G' },
-    { name: 'Track 8', artist: 'Artist H' },
-    { name: 'Track 9', artist: 'Artist I' },
-    { name: 'Track 10', artist: 'Artist J' },
-  ];
+    try {
+        const { searchParams } = new URL(request.url);
 
-  return NextResponse.json(mockTracks);
+        // Define the default constants
+        const defaultConstants = {
+            w1: 1.0,
+            w2: 2.5,
+            C: 3.0,
+            tau: 20,
+            beta: 0.04,
+            epsilon: 1e-6
+        };
 
-  /*
-  const spotifyApiUrl = `https://api.spotify.com/v1/browse/featured-playlists`;
+        // Override defaults with any valid query parameters
+        const constants = {
+            w1: searchParams.has('w1') ? parseFloat(searchParams.get('w1')) : defaultConstants.w1,
+            w2: searchParams.has('w2') ? parseFloat(searchParams.get('w2')) : defaultConstants.w2,
+            C: searchParams.has('C') ? parseFloat(searchParams.get('C')) : defaultConstants.C,
+            tau: searchParams.has('tau') ? parseFloat(searchParams.get('tau')) : defaultConstants.tau,
+            beta: searchParams.has('beta') ? parseFloat(searchParams.get('beta')) : defaultConstants.beta,
+            epsilon: defaultConstants.epsilon
+        };
 
-  try {
-    const response = await axios.get(spotifyApiUrl, {
-      headers: {
-        Authorization: `Bearer ${process.env.SPOTIFY_ACCESS_TOKEN}`,
-      },
-      params: {
-        limit: 1, 
-      },
-    });
+        // 1. Generate the hypothetical data
+        const allTracks = generateMockData();
 
-    const playlist = response.data.playlists.items[0];
-    if (!playlist) {
-      return NextResponse.json({ error: 'No featured playlists found' }, { status: 404 });
+        // 2. Calculate the adjusted score for each track
+        allTracks.forEach(track => {
+            track.adjustedScore = calculateAdjustedScore(track, constants);
+        });
+
+        // 3. Sort tracks by the new score in descending order
+        const rankedTracks = allTracks.sort((a, b) => b.adjustedScore - a.adjustedScore);
+
+        // 4. Return the top 10
+        const top10 = rankedTracks.slice(0, 10);
+
+        return NextResponse.json(top10);
+
+    } catch (error) {
+        console.error("Error in top10 route:", error);
+        return NextResponse.json({ error: "Failed to generate top 10 chart", details: error.message }, { status: 500 });
     }
-
-    const playlistId = playlist.id;
-    const tracksUrl = `https.api.spotify.com/v1/playlists/${playlistId}/tracks`;
-
-    const tracksResponse = await axios.get(tracksUrl, {
-      headers: {
-        Authorization: `Bearer ${process.env.SPOTIFY_ACCESS_TOKEN}`,
-      },
-      params: {
-        limit: 10,
-      },
-    });
-    
-    const tracks = tracksResponse.data.items.map(item => ({
-      name: item.track.name,
-      artist: item.track.artists.map(artist => artist.name).join(', '),
-    }));
-
-    return NextResponse.json(tracks);
-  } catch (error) {
-    console.error('Error fetching from Spotify API:', error.response ? error.response.data : error.message);
-    return NextResponse.json({ error: 'Failed to fetch data from Spotify', details: error.response ? error.response.data : error.message }, { status: error.response ? error.response.status : 500 });
-  }
-  */
 }
